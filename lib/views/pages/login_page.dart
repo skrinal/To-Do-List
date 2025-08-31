@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:to_do_list_flutter/data/constants.dart';
+import 'package:to_do_list_flutter/data/models/user.dart';
+import 'package:to_do_list_flutter/data/services/api_service.dart';
 import '../widget_tree.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,11 +17,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController controllerEmail = TextEditingController(text: '123');
-  TextEditingController controllerPw = TextEditingController(text: '456');
+  TextEditingController controllerEmail = TextEditingController();
+  TextEditingController controllerPw = TextEditingController();
 
-  String confirmedEmail = "123";
-  String confirmedPw = "456";
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,20 @@ class _LoginPageState extends State<LoginPage> {
                         height: 200.0,
                       ),
                       SizedBox(height: 20.0),
+                      TextField(
+                        controller: controllerEmail,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          errorText: errorMessage,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      TextField(
+                        controller: controllerPw,
+                        decoration: InputDecoration(labelText: 'Password'),
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 20.0),
                       FilledButton(
                         onPressed: () {
                           onLoginPressed();
@@ -46,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: FilledButton.styleFrom(
                           minimumSize: Size(double.infinity, 40.0),
                         ),
-                        child: Text('xddd'),
+                        child: Text('Login'),
                       ),
                     ],
                   ),
@@ -59,9 +78,32 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void onLoginPressed() {
-    if (confirmedEmail == controllerEmail.text &&
-        confirmedPw == controllerPw.text) {
+  void onLoginPressed() async {
+    setState(() {
+      errorMessage = "";
+    });
+
+    if (!isValidEmail(controllerEmail.text)) {
+      setState(() {
+        errorMessage = "Invalid email format";
+      });
+      return;
+    }
+    
+    try {
+      final result = await ApiService.callWebApi(
+        endpoint: 'login',
+        method: 'POST',
+        body: {'email': controllerEmail.text, 'password': controllerPw.text},
+      );
+
+      final user = User.fromJson(result);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(LoginConst.userId, user.id);
+      await prefs.setString(LoginConst.userName, user.userName);
+      await prefs.setString(LoginConst.email, controllerEmail.text);
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -71,6 +113,17 @@ class _LoginPageState extends State<LoginPage> {
         ),
         (route) => false,
       );
+      controllerEmail.clear();
+      controllerPw.clear();
+    } catch (e) {
+      setState(() {
+        errorMessage = "Invalid email or password";
+      });
     }
   }
+}
+
+bool isValidEmail(String email) {
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  return emailRegex.hasMatch(email);
 }

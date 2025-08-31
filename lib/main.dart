@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/constants.dart';
-import 'data/notifieres.dart';
+import 'state/notifieres.dart';
 import 'views/pages/welcome_page.dart';
 
 void main() {

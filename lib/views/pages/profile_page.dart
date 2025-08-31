@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../data/constants.dart';
 import 'settings_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -28,12 +29,14 @@ class ProfilePage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
+        child: Row(
           children: [
             CircleAvatar(
-              radius: 50.0,
+              radius: 55.0,
               backgroundImage: AssetImage('assets/images/profile.jpg'),
             ),
+            SizedBox(width: 20.0),
+            Text(LoginConst.userName, style: KUserNameText.style)
           ],
         ),
       ),

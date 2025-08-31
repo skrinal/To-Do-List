@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/notifieres.dart';
+import '../../state/notifieres.dart';
 
 class NavbarWidget extends StatelessWidget {
   const NavbarWidget({Key? key});
@@ -11,14 +11,40 @@ class NavbarWidget extends StatelessWidget {
       valueListenable: selectedPageNotifer,
       builder: (context, selectedPage, child) {
         return NavigationBar(
-          destinations: [
-            NavigationDestination(icon: Icon(Icons.home)),
-            NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
-          ],
+          height: 50,
+          backgroundColor: Colors.transparent,
+          indicatorColor: Colors.transparent,
+          selectedIndex: selectedPage,
+          overlayColor: WidgetStateColor.transparent,
           onDestinationSelected: (int value) {
             selectedPageNotifer.value = value;
           },
-          selectedIndex: selectedPage,
+          destinations: [
+            NavigationDestination(
+              icon: Icon(
+                Icons.task,
+                size: 30.0,
+                color: selectedPage == 0 ? Colors.white : Colors.grey,
+              ),
+              label: "",
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.add_circle_outline,
+                size: 35.0,
+                color: selectedPage == 1 ? Colors.white : Colors.grey,
+              ),
+              label: "",
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.person,
+                size: 30.0,
+                color: selectedPage == 2 ? Colors.white : Colors.grey,
+              ),
+              label: "",
+            ),
+          ],
         );
       },
     );

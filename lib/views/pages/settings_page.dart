@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/constants.dart';
-import '../../data/notifieres.dart';
+import '../../state/notifieres.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

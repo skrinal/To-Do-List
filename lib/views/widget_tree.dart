@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list_flutter/data/notifieres.dart';
+import 'package:to_do_list_flutter/state/notifieres.dart';
 import 'package:to_do_list_flutter/views/widget/navbar_widget.dart';
-import 'pages/home_page.dart';
+import 'pages/add_task_page.dart';
+import 'pages/task_page.dart';
 import 'pages/profile_page.dart';
 
-
-List<Widget> pages = [HomePage(), ProfilePage()];
+List<Widget> pages = [TaskPage(), AddTaskPage(),ProfilePage()];
 
 class WidgetTree extends StatelessWidget {
   const WidgetTree({super.key});
